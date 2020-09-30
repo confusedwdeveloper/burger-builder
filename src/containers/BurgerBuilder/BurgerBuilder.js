@@ -19,6 +19,17 @@ export default class BurgerBuilder extends Component {
       meat: 0,
     },
     totalPrice: 100,
+    purchasable: false,
+  };
+
+  // new method to manage purchasable state
+  updatePurchaseState = (ingredients) => {
+    const sum = Object.keys(ingredients) // prolly Object.values().reduce is more elegant
+      .map((igkey) => ingredients[igkey])
+      .reduce((a, b) => a + b);
+
+    // update state
+    this.setState({ purchasable: sum > 0 });
   };
 
   // method to add ingredient
@@ -47,6 +58,7 @@ export default class BurgerBuilder extends Component {
       ingredients: updatedIngredients,
       totalPrice: newPrice,
     });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   //method to remove ingredient
@@ -80,6 +92,7 @@ export default class BurgerBuilder extends Component {
       ingredients: updatedIngredients,
       totalPrice: newPrice,
     });
+    this.updatePurchaseState(updatedIngredients);
   };
 
   render() {
@@ -99,6 +112,7 @@ export default class BurgerBuilder extends Component {
           ingredientRemoved={this.removeIngredientHandler}
           disabled={disabledInfo}
           price={this.state.totalPrice}
+          purchasable={this.state.purchasable}
         />
       </Aux>
     );
