@@ -1,5 +1,5 @@
 import * as React from "react";
-import Aux from "../../../hoc/Aux";
+import Aux from "../../../hoc/Aux/Aux";
 import Backdrop from "../Backdrop/Backdrop";
 import classes from "./Modal.module.css";
 
@@ -19,5 +19,8 @@ const Modal = ({ children, show, modalClosed }) => {
     </Aux>
   );
 };
+const checker = (prevProps, nextProps) => {
+  return prevProps.show === nextProps.show;
+};
 
-export default Modal;
+export default React.memo(Modal, checker);
