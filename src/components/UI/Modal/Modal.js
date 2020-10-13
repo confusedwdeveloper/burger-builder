@@ -20,7 +20,7 @@ const Modal = ({ children, show, modalClosed }) => {
   );
 };
 const checker = (prevProps, nextProps) => {
-  return prevProps.show === nextProps.show;
+  return prevProps.show === nextProps.show && prevProps.loading === nextProps.loading
 };
 
 export default React.memo(Modal, checker);
