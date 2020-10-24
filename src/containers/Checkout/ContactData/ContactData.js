@@ -81,6 +81,23 @@ export default class ContactData extends Component {
     }
   };
 
+  inputChangedHandler = (event, inputIdentifier) => {
+    // copy whole object
+    const updatedOrderForm = {
+      ...this.state.orderForm,
+    };
+    // copy object
+    const updatedFormElement = { ...updatedOrderForm[inputIdentifier] };
+
+    // now can safely update value
+    updatedFormElement.value = event.target.value;
+
+    // update copied obj
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+    this.setState({ orderForm: updatedOrderForm });
+  };
+
   render() {
     const formElementsArray = [];
     for (const key in this.state.orderForm) {
@@ -98,6 +115,7 @@ export default class ContactData extends Component {
             elementType={el.config.elementType}
             elementConfig={el.config.elementConfig}
             value={el.config.value}
+            changed={(e) => this.inputChangedHandler(e, el.id)}
           />
         ))}
         <Button clicked={this.orderHandler} btnType="Success">
