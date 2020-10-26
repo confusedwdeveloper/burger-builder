@@ -15,6 +15,11 @@ export default class ContactData extends Component {
           placeholder: "Your Name",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       street: {
         elementType: "input",
@@ -23,6 +28,11 @@ export default class ContactData extends Component {
           placeholder: "Street",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       pinCode: {
         elementType: "input",
@@ -31,6 +41,13 @@ export default class ContactData extends Component {
           placeholder: "PIN Code",
         },
         value: "",
+        validation: {
+          required: true,
+          minLength: 6,
+          maxLength: 6,
+        },
+        valid: false,
+        touched: false,
       },
       country: {
         elementType: "input",
@@ -39,6 +56,11 @@ export default class ContactData extends Component {
           placeholder: "Country",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       email: {
         elementType: "input",
@@ -47,6 +69,11 @@ export default class ContactData extends Component {
           placeholder: "Your Email",
         },
         value: "",
+        validation: {
+          required: true,
+        },
+        valid: false,
+        touched: false,
       },
       deliveryMethod: {
         elementType: "select",
@@ -57,8 +84,11 @@ export default class ContactData extends Component {
           ],
         },
         value: "",
+        valid: true,
+        validation: {},
       },
     },
+    formIsValid: false, // for overall form validation
     loading: false,
   };
 
@@ -88,6 +118,25 @@ export default class ContactData extends Component {
     }
   };
 
+  // method to validate inputs
+  checkValidity = (value, rules) => {
+    let isValid = true;
+
+    if (rules.required) {
+      isValid = value.trim() !== "" && isValid;
+    }
+
+    if (rules.minLength) {
+      isValid = value.trim().length >= rules.minLength && isValid;
+    }
+
+    if (rules.maxLength) {
+      isValid = value.trim().length <= rules.maxLength && isValid;
+    }
+
+    return isValid;
+  };
+
   inputChangedHandler = (event, inputIdentifier) => {
     // copy whole object
     const updatedOrderForm = {
@@ -99,10 +148,25 @@ export default class ContactData extends Component {
     // now can safely update value
     updatedFormElement.value = event.target.value;
 
+    //validity check
+    updatedFormElement.valid = this.checkValidity(
+      updatedFormElement.value,
+      updatedFormElement.validation
+    );
+
+    // since this event fired we know user "touched" the input
+    updatedFormElement.touched = true;
+
     // update copied obj
     updatedOrderForm[inputIdentifier] = updatedFormElement;
 
-    this.setState({ orderForm: updatedOrderForm });
+    // checking validity of overall form
+    let formIsValid = true;
+    for (const key in updatedOrderForm) {
+      formIsValid = updatedOrderForm[key].valid && formIsValid;
+    }
+
+    this.setState({ orderForm: updatedOrderForm, formIsValid });
   };
 
   render() {
@@ -123,9 +187,14 @@ export default class ContactData extends Component {
             elementConfig={el.config.elementConfig}
             value={el.config.value}
             changed={(e) => this.inputChangedHandler(e, el.id)}
+            invalid={!el.config.valid}
+            shouldValidate={el.config.validation}
+            touched={el.config.touched}
           />
         ))}
-        <Button btnType="Success">ORDER</Button>
+        <Button disabled={!this.state.formIsValid} btnType="Success">
+          ORDER
+        </Button>
       </form>
     );
     if (this.state.loading) {
