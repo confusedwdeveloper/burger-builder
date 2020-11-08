@@ -12,7 +12,6 @@ import * as types from "../../store/actions";
 
 class BurgerBuilder extends Component {
   state = {
-    purchasable: false,
     purchasing: false, // to handle modal
     loading: false, // spinner
     error: false,
@@ -35,8 +34,7 @@ class BurgerBuilder extends Component {
       .map((igkey) => ingredients[igkey])
       .reduce((a, b) => a + b);
 
-    // update state
-    this.setState({ purchasable: sum > 0 });
+    return sum > 0;
   };
 
   // handler for order now button
@@ -94,7 +92,7 @@ class BurgerBuilder extends Component {
             ingredientRemoved={this.props.onIngredientRemoved}
             disabled={disabledInfo}
             price={this.props.price}
-            purchasable={this.state.purchasable}
+            purchasable={this.updatePurchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
           />
         </>
