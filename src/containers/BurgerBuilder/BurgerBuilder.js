@@ -5,27 +5,22 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import axios from "../../axios-orders";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
-import { addIngredient, removeIngredient } from "../../store/actions/index";
+import {
+  addIngredient,
+  removeIngredient,
+  initIngredients,
+} from "../../store/actions/index";
+import axios from "../../axios-orders";
 
 class BurgerBuilder extends Component {
   state = {
     purchasing: false, // to handle modal
-    loading: false, // spinner
-    error: false,
   };
 
   componentDidMount() {
-    // axios
-    //   .get("/ingredients.json")
-    //   .then((res) => {
-    //     this.setState({ ingredients: res.data });
-    //   })
-    //   .catch((er) => {
-    //     this.setState({ error: true });
-    //   });
+    this.props.onInitIngredients();
   }
 
   // new method to manage purchasable state
@@ -63,7 +58,7 @@ class BurgerBuilder extends Component {
 
     let orderSummary = null;
 
-    let burgerUI = this.state.error ? (
+    let burgerUI = this.props.error ? (
       <p>Ingredients can't be loaded!</p>
     ) : (
       <Spinner />
@@ -92,10 +87,6 @@ class BurgerBuilder extends Component {
       );
     }
 
-    if (this.state.loading) {
-      orderSummary = <Spinner />;
-    }
-
     return (
       <Aux>
         <Modal
@@ -114,6 +105,7 @@ class BurgerBuilder extends Component {
 const mapStateToProps = (state) => ({
   ings: state.ingredients,
   price: state.totalPrice,
+  error: state.error,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -121,6 +113,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(addIngredient(ingredientName)),
   onIngredientRemoved: (ingredientName) =>
     dispatch(removeIngredient(ingredientName)),
+  onInitIngredients: () => dispatch(initIngredients()),
 });
 
 export default connect(
