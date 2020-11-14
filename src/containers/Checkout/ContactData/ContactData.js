@@ -109,15 +109,6 @@ class ContactData extends Component {
       price: this.props.price,
       orderData: formData,
     };
-    try {
-      await axios.post("/orders.json", order);
-      // console.log(res)
-      this.props.history.replace("/");
-    } catch (err) {
-      // console.log(err)
-      // this.setState({loading: false, purchasing: false})
-      this.setState({ loading: false });
-    }
   };
 
   // method to validate inputs

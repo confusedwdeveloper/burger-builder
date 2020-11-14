@@ -38,7 +38,12 @@ export default function reducer(state = initialState, action) {
     case types.SET_INGREDIENTS: {
       return {
         ...state,
-        ingredients: action.ingredients,
+        ingredients: {
+          salad: action.ingredients.salad,
+          bacon: action.ingredients.bacon,
+          cheese: action.ingredients.cheese,
+          meat: action.ingredients.meat,
+        },
         error: false,
       };
     }
