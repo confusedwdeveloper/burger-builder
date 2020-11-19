@@ -44,6 +44,7 @@ export default function reducer(state = initialState, action) {
           cheese: action.ingredients.cheese,
           meat: action.ingredients.meat,
         },
+        totalPrice: 100,
         error: false,
       };
     }

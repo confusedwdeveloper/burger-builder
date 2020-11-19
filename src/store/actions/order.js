@@ -33,3 +33,5 @@ export const purchaseBurger = (orderData) => {
     }
   };
 };
+
+export const purchaseInit = () => ({ type: types.PURCHASE_INIT });

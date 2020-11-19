@@ -11,6 +11,7 @@ import {
   addIngredient,
   removeIngredient,
   initIngredients,
+  purchaseInit,
 } from "../../store/actions/index";
 import axios from "../../axios-orders";
 
@@ -44,6 +45,7 @@ class BurgerBuilder extends Component {
 
   // if we continue purchase
   purchaseContinueHandler = async () => {
+    this.props.onInitPurchase();
     this.props.history.push("/checkout");
   };
 
@@ -114,6 +116,7 @@ const mapDispatchToProps = (dispatch) => ({
   onIngredientRemoved: (ingredientName) =>
     dispatch(removeIngredient(ingredientName)),
   onInitIngredients: () => dispatch(initIngredients()),
+  onInitPurchase: () => dispatch(purchaseInit()),
 });
 
 export default connect(
