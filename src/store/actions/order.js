@@ -35,3 +35,35 @@ export const purchaseBurger = (orderData) => {
 };
 
 export const purchaseInit = () => ({ type: types.PURCHASE_INIT });
+
+export const fetchOrdersSuccess = (orders) => ({
+  type: types.FETCH_ORDERS_SUCCESS,
+  orders,
+});
+
+export const fetchOrdersFail = (error) => ({
+  type: types.FETCH_ORDERS_FAIL,
+  error,
+});
+
+export const fetchOrdersStart = () => ({ type: types.FETCH_ORDERS_START });
+
+export const fetchOrders = () => (dispatch) => {
+  dispatch(fetchOrdersStart());
+  axios
+    .get("/orders.json")
+    .then((res) => {
+      const orders = [];
+      for (const key in res.data) {
+        // this approach to save the key or we could have used Object.values
+        orders.push({
+          ...res.data[key],
+          id: key,
+        });
+      }
+      dispatch(fetchOrdersSuccess(orders));
+    })
+    .catch((err) => {
+      dispatch(fetchOrdersFail(err));
+    });
+};
